@@ -1,10 +1,9 @@
 import datetime
 import json
-import re
 import os
+import re
 
 import pandas as pd
-import alpha_vantage
 import requests
 from dotenv import load_dotenv
 
@@ -36,22 +35,22 @@ def get_greeting():
 
 def filter_data_by_user_date(date_for_filtering, df):
     """Функция возвращает данные с начала месяца, на который выпадает входящая дата, по входящую дату"""
-    df['Дата операции'] = pd.to_datetime(df['Дата операции'], format="%d.%m.%Y %H:%M:%S", dayfirst=True)
-    pattern = re.compile(r'\d+-\d+-\d+ \d+:\d+:\d+')
+    df["Дата операции"] = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S", dayfirst=True)
+    pattern = re.compile(r"\d+-\d+-\d+ \d+:\d+:\d+")
     if pattern.match(date_for_filtering):
-        date_up = datetime.datetime.strptime(date_for_filtering, '%Y-%m-%d %H:%M:%S')  # верхняя граница фильтрации
+        date_up = datetime.datetime.strptime(date_for_filtering, "%Y-%m-%d %H:%M:%S")  # верхняя граница фильтрации
         date_low = date_up.replace(day=1, hour=0, minute=0, second=0)  # нижняя граница фильтрации
-        filtered_transaction = df.loc[(df['Дата операции'] >= date_low) & (df['Дата операции'] < date_up)]
+        filtered_transaction = df.loc[(df["Дата операции"] >= date_low) & (df["Дата операции"] < date_up)]
         return filtered_transaction
     else:
         raise ValueError
 
 
 def get_info_by_card(df: pd.DataFrame):
+    """Функция получает информацию о расходах по картам и кэшбеке"""
     grouped_by_card = df.groupby("Номер карты").agg(
-
         total_spent=("Сумма платежа", lambda x: abs(round(x[x < 0].sum(), 2))),
-        cashback=("Сумма платежа", lambda x: abs(round(x[x < 0].sum() * 0.01, 2)))
+        cashback=("Сумма платежа", lambda x: abs(round(x[x < 0].sum() * 0.01, 2))),
     )
     grouped_by_card.reset_index(names="last_digits", inplace=True)
     card_info = grouped_by_card.to_json(orient="records")
@@ -60,9 +59,7 @@ def get_info_by_card(df: pd.DataFrame):
 
 def get_top_transaction(df: pd.DataFrame):
     """Функция получает топ-5 транзакций по сумме платежа"""
-    top_transactions = df.sort_values(by="Сумма платежа", ascending=True).head(
-        5
-    )
+    top_transactions = df.sort_values(by="Сумма платежа", ascending=True).head(5)
     return [
         {
             "date": row["Дата операции"].strftime("%d.%m.%Y"),
@@ -75,6 +72,7 @@ def get_top_transaction(df: pd.DataFrame):
 
 
 def get_exchange_rate():
+    """Функция получает информацию о курсе валют"""
     currencies_list = []
     with open(USER_SETTINGS) as f:
         data = json.load(f)
@@ -91,6 +89,7 @@ def get_exchange_rate():
 
 
 def get_stock_prices():
+    """Функция получает информацию о стоимости акций"""
     stock_prices = []
     with open(USER_SETTINGS) as f:
         data = json.load(f)
@@ -101,16 +100,6 @@ def get_stock_prices():
         data = requests.get(url).json()
         print(requests.get(url).status_code)
         quote_data = data["Global Quote"]
-        stock_info = {"stock": ticker, "price": float(quote_data['05. price'])}
+        stock_info = {"stock": ticker, "price": float(quote_data["05. price"])}
         stock_prices.append(stock_info)
     return stock_prices
-
-
-# date = "2021-12-10 22:00:01"
-# data_tr = read_data()
-# filter_df = filter_data_by_user_date(date, data_tr)
-# result = get_info_by_card(filter_df)
-# top = get_top_transaction(filter_df)
-
-# print(get_exchange_rate())
-print(get_stock_prices())

@@ -6,8 +6,9 @@ from src.utils import (
     get_greeting,
     get_info_by_card,
     get_stock_prices,
-    get_top_transaction,
+    get_top_transaction, read_data,
 )
+
 
 
 def get_main_page_data(date, df):
@@ -17,8 +18,12 @@ def get_main_page_data(date, df):
         "greeting": get_greeting(),
         "cards": get_info_by_card(filtered_df),
         "top_transactions": get_top_transaction(filtered_df),
-        "currency_rates": get_exchange_rate(),
-        "stock_prices": get_stock_prices(),
+        # "currency_rates": get_exchange_rate(),
+        # "stock_prices": get_stock_prices(),
     }
-    result = json.dumps(json_str, indent=4)
+    result = json.dumps(json_str, indent=4, ensure_ascii=False)
     return result
+
+# data_for_analysis = read_data()
+# user_date = "2021-11-23 12:53:01"
+# print(get_main_page_data(user_date, data_for_analysis))

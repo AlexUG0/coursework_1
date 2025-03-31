@@ -1303,6 +1303,18 @@ files = [
 ]
 
 [[package]]
+name = "pd"
+version = "0.0.4"
+description = "more detailed python backtraces (similar to backtrace module)"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pd-0.0.4-py3-none-any.whl", hash = "sha256:1658b04e2889abf7bb4590f6126ed618bdae474f5f9111872a446dbecd0543ef"},
+    {file = "pd-0.0.4.tar.gz", hash = "sha256:46f21dd5854ee7eb4397daa43191662f787ccf4cfe78e2472564bf9ce7e7614b"},
+]
+
+[[package]]
 name = "peewee"
 version = "3.17.9"
 description = "a little orm"
@@ -2069,4 +2081,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "5dbdfce3600141218fd8e40fed515dabfc592f1d3eb36207393237ecf79eab26"
+content-hash = "57b19fadeae59edb51de65d710556c6ede05d02dd5020f6cceedca9c30602fcc"

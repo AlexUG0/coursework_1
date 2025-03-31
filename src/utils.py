@@ -22,20 +22,20 @@ def read_data(patch=DATA_FILE):
 def get_greeting():
     """Функция возвращает приветствие пользователя в зависимости от текущего времени"""
     current_hour = int(datetime.datetime.now().hour)  # текущий час
-    if current_hour < 12 >= 6:
+    if 6 <= current_hour < 12:
         greeting = "Доброе утро!"
-    elif current_hour >= 12 < 18:
+    elif 12 <= current_hour < 18:
         greeting = "Добрый день!"
-    elif current_hour >= 18 < 24:
+    elif 18 <= current_hour < 24:
         greeting = "Добрый вечер!"
     else:
         greeting = "Доброй ночи!"
     return greeting
 
 
-def filter_data_by_user_date(date_for_filtering, df):
+def filter_data_by_user_date(date_for_filtering:str, df):
     """Функция возвращает данные с начала месяца, на который выпадает входящая дата, по входящую дату"""
-    df["Дата операции"] = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S", dayfirst=True)
+    df["Дата операции"] = pd.to_datetime(df["Дата операции"], format="mixed", dayfirst=True)
     pattern = re.compile(r"\d+-\d+-\d+ \d+:\d+:\d+")
     if pattern.match(date_for_filtering):
         date_up = datetime.datetime.strptime(date_for_filtering, "%Y-%m-%d %H:%M:%S")  # верхняя граница фильтрации
@@ -53,7 +53,7 @@ def get_info_by_card(df: pd.DataFrame):
         cashback=("Сумма платежа", lambda x: abs(round(x[x < 0].sum() * 0.01, 2))),
     )
     grouped_by_card.reset_index(names="last_digits", inplace=True)
-    card_info = grouped_by_card.to_json(orient="records")
+    card_info = grouped_by_card.to_dict("records")
     return card_info
 
 
@@ -97,9 +97,8 @@ def get_stock_prices():
     for ticker in tickers:
         apy_key = os.getenv("API_STOCKS")
         url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={ticker}&apikey={apy_key}"
-        data = requests.get(url).json()
-        print(requests.get(url).status_code)
-        quote_data = data["Global Quote"]
+        received_data = requests.get(url).json()
+        quote_data = received_data["Global Quote"]
         stock_info = {"stock": ticker, "price": float(quote_data["05. price"])}
         stock_prices.append(stock_info)
     return stock_prices

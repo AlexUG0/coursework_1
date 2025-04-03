@@ -6,12 +6,13 @@ from src.utils import (
     get_greeting,
     get_info_by_card,
     get_stock_prices,
-    get_top_transaction, read_data,
+    get_top_transaction, #read_data,
 )
 
 
 
 def get_main_page_data(date, df):
+    """ Функция для страницы "Главная" """
     filtered_df = filter_data_by_user_date(date, df)
 
     json_str = {
@@ -21,6 +22,7 @@ def get_main_page_data(date, df):
         # "currency_rates": get_exchange_rate(),
         # "stock_prices": get_stock_prices(),
     }
+
     result = json.dumps(json_str, indent=4, ensure_ascii=False)
     return result
 

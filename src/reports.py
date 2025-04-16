@@ -50,11 +50,10 @@ def report_decorator(filename=None):
 
 
 @report_decorator()
-def spending_by_category(transactions: pd.DataFrame,
-                         category: str,
-                         date_: Optional[str] = None) -> pd.DataFrame:
-    transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S",
-                                                   dayfirst=True).dt.date
+def spending_by_category(transactions: pd.DataFrame, category: str, date_: Optional[str] = None) -> pd.DataFrame:
+    transactions["Дата операции"] = pd.to_datetime(
+        transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S", dayfirst=True
+    ).dt.date
     # transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="mixed", dayfirst=True)
     if date_:
         date_up = datetime.datetime.strptime(date_, "%Y-%m-%d").date()
@@ -62,9 +61,11 @@ def spending_by_category(transactions: pd.DataFrame,
         date_up = date.today()
     date_low = date_up - relativedelta(months=3)
     filter_by_date_transaction = transactions.loc[
-        (transactions["Дата операции"] >= date_low) & (transactions["Дата операции"] <= date_up)]
+        (transactions["Дата операции"] >= date_low) & (transactions["Дата операции"] <= date_up)
+    ]
     filtered_df = filter_by_date_transaction[
-        (filter_by_date_transaction['Категория'].str.lower() == category) & (
-                filter_by_date_transaction['Сумма платежа'] < 0)]
+        (filter_by_date_transaction["Категория"].str.lower() == category)
+        & (filter_by_date_transaction["Сумма платежа"] < 0)
+    ]
 
     return filtered_df

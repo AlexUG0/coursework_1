@@ -20,8 +20,11 @@ def main():
     user_category = input().lower()
     print("и конечную дату трехмесячного периода в формате ГГГГ-ММ-ДД")
     user_date_1 = input()
-    print(spending_by_category(read_data(), user_category, user_date_1).to_json(orient='records', indent=4,
-                                                                                force_ascii=False))
+    print(
+        spending_by_category(read_data(), user_category, user_date_1).to_json(
+            orient="records", indent=4, force_ascii=False
+        )
+    )
 
 
 if __name__ == "__main__":

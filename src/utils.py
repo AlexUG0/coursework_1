@@ -1,8 +1,7 @@
-import json
 import datetime
+import json
 import logging
 import os
-# from datetime import datetime
 
 import pandas as pd
 import requests
@@ -10,14 +9,11 @@ from dotenv import load_dotenv
 
 from config import DATA_FILE, PATH_HOME, USER_SETTINGS
 
-# import re
-
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     filename=os.path.join(PATH_HOME, "logs", "logs.log"),
-    encoding='utf-8',
+    encoding="utf-8",
     filemode="w",
 )
 logger = logging.getLogger("utils")

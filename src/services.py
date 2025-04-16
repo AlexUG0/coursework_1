@@ -1,16 +1,6 @@
 import json
 import logging
-import os
 
-from config import PATH_HOME
-
-# logging.basicConfig(
-#     level=logging.INFO,
-#     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-#     filename=os.path.join(PATH_HOME, "logs", "services.log"),
-#     encoding='utf-8',
-#     filemode="w",
-# )
 logger = logging.getLogger("services")
 
 

@@ -1,14 +1,17 @@
-import datetime
 import json
+import datetime
 import logging
 import os
-#import re
+# from datetime import datetime
 
 import pandas as pd
 import requests
 from dotenv import load_dotenv
 
 from config import DATA_FILE, PATH_HOME, USER_SETTINGS
+
+# import re
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -33,10 +36,10 @@ def read_data(patch=DATA_FILE):
         logger.error("Не найден путь к файлу")
 
 
-
 def get_greeting():
     """Функция возвращает приветствие пользователя в зависимости от текущего времени"""
-    current_hour = int(datetime.datetime.now().hour)  # текущий час
+    current_date = datetime.datetime.now()
+    current_hour = current_date.hour  # текущий час
     if 6 <= current_hour < 12:
         greeting = "Доброе утро!"
     elif 12 <= current_hour < 18:
@@ -116,6 +119,7 @@ def get_exchange_rate():
         return currencies_list
     except Exception as e:
         logger.error(f"Ошибка обработки данных {e}")
+
 
 def get_stock_prices():
     """Функция получает информацию о стоимости акций"""

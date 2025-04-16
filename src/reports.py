@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+from datetime import date
 from typing import Optional
 
 import pandas as pd
@@ -51,11 +52,12 @@ def report_decorator(filename=None):
 @report_decorator()
 def spending_by_category(transactions: pd.DataFrame,
                          category: str,
-                         date: Optional[str] = None) -> pd.DataFrame:
-    transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="mixed",
-                                                   dayfirst=True)
-    if date:
-        date_up = datetime.datetime.strptime(date, "%Y-%m-%d")
+                         date_: Optional[str] = None) -> pd.DataFrame:
+    transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S",
+                                                   dayfirst=True).dt.date
+    # transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="mixed", dayfirst=True)
+    if date_:
+        date_up = datetime.datetime.strptime(date_, "%Y-%m-%d").date()
     else:
         date_up = date.today()
     date_low = date_up - relativedelta(months=3)
@@ -63,6 +65,6 @@ def spending_by_category(transactions: pd.DataFrame,
         (transactions["Дата операции"] >= date_low) & (transactions["Дата операции"] <= date_up)]
     filtered_df = filter_by_date_transaction[
         (filter_by_date_transaction['Категория'].str.lower() == category) & (
-                    filter_by_date_transaction['Сумма операции'] < 0)]
+                filter_by_date_transaction['Сумма платежа'] < 0)]
 
     return filtered_df
